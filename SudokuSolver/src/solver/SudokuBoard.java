@@ -2,17 +2,19 @@ package solver;
 
 
 public class SudokuBoard {
-	int[][] board;
-	boolean[][] original;
+	private int[][] board;
 
 	public SudokuBoard() {
 		board = new int[9][9];
-		original = new boolean[9][9];
 	}
-
+	
+/** Imports a board in int[][] format. Copies value and checks if board is valid.
+ * 	Empty boxes should have value 0.
+ * @param b int[9][9] [0...9]
+ * @return true if board is valid, false if not valid
+ */
 	public boolean importBoard(int[][] b) {
 		board = new int[9][9];
-		original = new boolean[9][9];
 		for (int y = 0; y < 9; y++) {
 			for (int x = 0; x < 9; x++) {
 				if (b[y][x] != 0) {
@@ -20,38 +22,41 @@ public class SudokuBoard {
 						return false;
 					}
 					board[y][x] = b[y][x];
-					original[y][x] = true;
 				}
 			}
 		}
 		return true;
 
 	}
-
+	
+	
+	/** Returns board in int[9][9] format 
+	 * @return int[][]
+	 */
 	public int[][] exportBoard() {
 		return board;
 	}
+	
 
 	/**
 	 * Checks specific board if valid if its value is changed to input value.
 	 * Doesn't change the value, even if possible. Checks row, column and lastly
-	 * box's 3x3 group. If the box is an original, returns true if the values
+	 * box's 3x3 group. If the box is an original value, returns true if the values
 	 * match, else false.
 	 * 
 	 * @param y
 	 * @param x
-	 * @param value
-	 *            [1-9]
+	 * @param value          
 	 * @return boolean
 	 */
-	public boolean check(int y, int x, int value) {
+	private boolean check(int y, int x, int value) {
 		
 		// Checks if legal parameters
 		if (x < 0 || y < 0 || x > 9 || y > 9 || value < 1 || value > 9){
 			return false;
 		}
 		// Checks if original
-		if (original[y][x]) {
+		if (board[y][x]!=0) {
 			return board[y][x] == value;
 		}
 		// Checks row, column
@@ -68,29 +73,9 @@ public class SudokuBoard {
 					return false;
 			}
 		}
-
 		return true;
 	}
 
-	/**
-	 * Returns a Point with x,y coordinates of next box, null if last box (8,8)
-	 * 
-	 * @param x
-	 * @param y
-	 * @return Point next
-	 */
-	public Point next(int y, int x) {
-		Point next = new Point(y, x);
-		if (x == 8 && y == 8) {
-			next = null;
-		} else if (x == 8 && y < 8) {
-			next.x = 0;
-			next.y++;
-		} else if (x < 8) {
-			next.x++;
-		}
-		return next;
-	}
 
 	/**
 	 * Solves the SudokuBoard if possible.
@@ -112,7 +97,7 @@ public class SudokuBoard {
 	private boolean solve(int y, int x) {
 		Point next = next(y, x);
 		// If original value
-		if (original[y][x]) {
+		if (board[y][x]!=0) {
 			if (y == 8 && x == 8) {
 				return true;
 			} else {
@@ -136,42 +121,24 @@ public class SudokuBoard {
 		}
 		return false;
 	}
-
+	
 	/**
-	 * Prints board in console.
+	 * Returns a Point with x,y coordinates of next box, null if last box (8,8)
+	 * @param x
+	 * @param y
+	 * @return Point next
 	 */
-	public void printBoard() {
-		System.out.println();
-		System.out.println("-----------------------------------");
-		for (int i = 0; i < 9; i++) {
-			System.out.print("\n");
-			if (i % 3 == 0)
-				System.out.print("\n");
-			for (int j = 0; j < 9; j++) {
-				if (j % 3 == 0)
-					System.out.print(" ");
-				if (board[i][j] == 0)
-					System.out.print(". ");
-				if (board[i][j] == 1)
-					System.out.print("1 ");
-				if (board[i][j] == 2)
-					System.out.print("2 ");
-				if (board[i][j] == 3)
-					System.out.print("3 ");
-				if (board[i][j] == 4)
-					System.out.print("4 ");
-				if (board[i][j] == 5)
-					System.out.print("5 ");
-				if (board[i][j] == 6)
-					System.out.print("6 ");
-				if (board[i][j] == 7)
-					System.out.print("7 ");
-				if (board[i][j] == 8)
-					System.out.print("8 ");
-				if (board[i][j] == 9)
-					System.out.print("9 ");
-			}
+	private Point next(int y, int x) {
+		Point next = new Point(y, x);
+		if (x == 8 && y == 8) {
+			next = null;
+		} else if (x == 8 && y < 8) {
+			next.x = 0;
+			next.y++;
+		} else if (x < 8) {
+			next.x++;
 		}
+		return next;
 	}
 
 	/**

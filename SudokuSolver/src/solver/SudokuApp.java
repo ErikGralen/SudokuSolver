@@ -85,18 +85,20 @@ public class SudokuApp extends Application {
 					temp.replaceText(1, 9, event.getCharacter());
 				}
 			});
-
 			// Adds to tile and inputFields
 			inputFields.put(i, temp);
 			tile.getChildren().add(temp);
 		}
 
-		// Bottom
+		// Bottom Buttons
 		tb = new HBox();
+		//Quit Button
 		Button buttonQuit = new Button("Quit");
 		buttonQuit.setOnAction(e -> quit());
+		//Clear Button
 		Button buttonClear = new Button("Clear");
 		buttonClear.setOnAction(e -> clear());
+		//Solve Button
 		Button buttonSolve = new Button("Solve");
 		buttonSolve.setOnAction(e -> solve());
 		tb.getChildren().addAll(buttonSolve, buttonClear, buttonQuit);
@@ -125,7 +127,6 @@ public class SudokuApp extends Application {
 	}
 
 	private void solve() {
-
 		// Converts TilePane to int[][]
 		int[][] matrix = new int[9][9];
 		int i = 0;
@@ -141,7 +142,7 @@ public class SudokuApp extends Application {
 		// Checks if legal import
 		if (!board.importBoard(matrix)) {
 			alertMessage("Board is not valid!");
-			// Checks if solvable
+		// Checks if solvable
 		} else if (board.solve()) {
 			i = 0;
 			matrix = board.exportBoard();
@@ -162,7 +163,7 @@ public class SudokuApp extends Application {
 	 * @param s
 	 *            - main text / error message
 	 */
-	public void alertMessage(String s) {
+	private void alertMessage(String s) {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Sudoku Board");
 		alert.setHeaderText(null);
